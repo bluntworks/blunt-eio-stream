@@ -1,0 +1,11 @@
+{
+  "name": "blunt-eio-stream",
+  "version": "0.0.1",
+  "description": "Stream interface for engine.io",
+  "main": "index.js",
+  "scripts": {
+    "test": "node ./test"
+  },
+  "author": "bluntworks",
+  "license": "MIT"
+}
