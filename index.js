@@ -1,22 +1,27 @@
-var log     = require('bitlog')
+var _       = require('lodash')
+var log     = require('blunt-log')
 var thru    = require('through')
-var eiojson = require('eiojson')
 
 var o = module.exports = function(socket) {
-  //simple pass through of json
   var s = thru(function(data) { this.queue(data) })
-  eiojson(socket)
+
+  var req = { _sok: socket }
+
+  var verbs = ['get','post', 'put', 'del']
+
   socket.on('json', function(data) {
-    var o = {
-      _sok: socket,
-      body: data
-    }
-    s.write(o)
+    var meth  = _.intersection(_.keys(data), verbs)
+    req.uri = data[meth]
+    req.body = data.body || {}
+    req.meth = meth
+
+    //log('REQ setup json', socket.id, req.meth, req.uri, req.body.key)
+
+    s.write(req)
   })
+
   return s
 }
-
-
 
 //Get Session info
 //TODO move this to sep module
@@ -31,6 +36,7 @@ function getsid(cookies, cfg) {
 }
 
 o.session = function(app) {
+
   var s = thru(function(req) {
     var _sok    = req._sok
     var cookies = cookie.parse(_sok.request.headers.cookie)
@@ -52,38 +58,38 @@ o.session = function(app) {
     })
   })
 
+  //s.autoDestroy = false
   return s
 }
 
-o.router = function() {
-  var rooster = require('rooster')()
+o.rooster = function() {
+  var R = require('rooster')()
+  return R
+}
 
+o.router = function(R) {
   var res = thru(function(data) {
-    log('res', data)
     s.queue(data)
   })
 
   var s = thru(function(req) {
     var self = this
-    Object.keys(req.body).forEach(function(verb) {
-      //log('loop over verbs', verb)
-      var ctx = rooster.test(verb, req.body[verb]);
-      if(ctx) ctx.fn.call(ctx, req, res)
-      else log.err('unknown route', req._sok.id, req.body, req._user)
-    })
+    var ctx = R.test(req.meth, req.uri);
+    if(ctx) ctx.fn.call(ctx, req, res)
+    else log.err('unknown route', req._sok.id, req.meth, req.uri,req._user)
   })
 
-  s.api = rooster
   return s
 }
 
 o.out = function(socket) {
-  //eiojson(socket)
-  return thru(function(res) {
-    log('out', res)
-    socket.json(res)
+  var ts =  thru(function(res) {
+    //log.err('FIRE OUT', socket.id)
+    var clients = socket.server.clients
+    Object.keys(clients).forEach(function(ck) {
+      clients[ck].json(res)
+    })
+    //socket.json(res)
   })
-
+  return ts
 }
-
-
