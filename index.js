@@ -63,7 +63,7 @@ o.session = function(app) {
 }
 
 o.rooster = function() {
-  var R = require('rooster')()
+  var R = require('nym')()
   return R
 }
 
