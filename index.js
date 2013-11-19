@@ -85,11 +85,11 @@ o.router = function(R) {
 o.out = function(socket) {
   var ts =  thru(function(res) {
     //log.err('FIRE OUT', socket.id)
-    var clients = socket.server.clients
-    Object.keys(clients).forEach(function(ck) {
-      clients[ck].json(res)
-    })
-    //socket.json(res)
+   //var clients = socket.server.clients
+   //Object.keys(clients).forEach(function(ck) {
+   //  clients[ck].json(res)
+   //})
+    socket.json(res)
   })
   return ts
 }

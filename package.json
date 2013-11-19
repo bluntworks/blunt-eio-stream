@@ -1,6 +1,6 @@
 {
   "name": "blunt-eio-stream",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Stream interface for engine.io",
   "main": "index.js",
   "scripts": {
@@ -16,6 +16,7 @@
     "nym": "0.0.1",
     "cookie-signature": "~1.0.1",
     "cookie": "~0.1.0",
-    "blunt-log": "0.0.1"
+    "blunt-log": "0.0.1",
+    "blunt-stack": "0.0.1"
   }
 }
