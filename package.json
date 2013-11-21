@@ -1,6 +1,6 @@
 {
   "name": "blunt-eio-stream",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Stream interface for engine.io",
   "main": "index.js",
   "scripts": {

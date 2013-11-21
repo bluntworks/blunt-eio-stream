@@ -44,6 +44,7 @@ o.session = function(app) {
     var sdb     = app.sdb.sublevel('sessions')
     var users   = app.users
 
+    log('sid', sid)
     var self = this
     sdb.get(sid, function(err, sess) {
       log.err('EIO STREAM get sess', err, sess)
