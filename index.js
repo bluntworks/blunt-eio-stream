@@ -46,6 +46,7 @@ o.session = function(app) {
 
     var self = this
     sdb.get(sid, function(err, sess) {
+      log.err('EIO STREAM get sess', err, sess)
       if(err || !sess) return self.emit('error', new Error('no session'))
       users.get(sess.user, function(err, u) {
         if(err || !u) return self.emit('error', new Error('no user'))
